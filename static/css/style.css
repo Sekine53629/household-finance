@@ -1,0 +1,107 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.stat-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.stat-card.success {
+    border-left-color: #198754;
+}
+
+.stat-card.warning {
+    border-left-color: #ffc107;
+}
+
+.stat-card.danger {
+    border-left-color: #dc3545;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.badge-health-excellent {
+    background-color: #198754;
+}
+
+.badge-health-good {
+    background-color: #20c997;
+}
+
+.badge-health-fair {
+    background-color: #0dcaf0;
+}
+
+.badge-health-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-health-danger {
+    background-color: #dc3545;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 2rem;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+.positive {
+    color: #198754;
+}
+
+.negative {
+    color: #dc3545;
+}
+
+.text-income {
+    color: #198754;
+    font-weight: 600;
+}
+
+.text-expense {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.text-balance {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.btn-action {
+    margin: 0.25rem;
+}

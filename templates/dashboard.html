@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}ダッシュボード - 家計管理システム{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>ダッシュボード</h1>
+        <p class="text-muted">{{ current_month|date:"Y年m月" }}の財務状況</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 純資産 -->
+    <div class="col-md-3">
+        <div class="card stat-card {% if net_worth >= 0 %}success{% else %}danger{% endif %}">
+            <div class="card-body">
+                <div class="stat-label">純資産</div>
+                <div class="stat-value {% if net_worth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    ¥{{ net_worth|floatformat:0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月次収入 -->
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-label">月次収入</div>
+                <div class="stat-value text-income">
+                    ¥{{ monthly_income|floatformat:0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月次支出 -->
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-label">月次支出</div>
+                <div class="stat-value text-expense">
+                    ¥{{ monthly_expense|floatformat:0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 純キャッシュフロー -->
+    <div class="col-md-3">
+        <div class="card stat-card {% if net_cashflow >= 0 %}success{% else %}danger{% endif %}">
+            <div class="card-body">
+                <div class="stat-label">純キャッシュフロー</div>
+                <div class="stat-value {% if net_cashflow >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    ¥{{ net_cashflow|floatformat:0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 最近の給与 -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-cash-coin"></i> 最近の給与明細
+            </div>
+            <div class="card-body">
+                {% if recent_salaries %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>年月</th>
+                                <th class="text-end">手取り額</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for salary in recent_salaries %}
+                            <tr>
+                                <td>{{ salary.year_month|date:"Y年m月" }}</td>
+                                <td class="text-end text-income">¥{{ salary.actual_payment|floatformat:0 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'salary:list' %}" class="btn btn-primary btn-sm">すべて表示</a>
+                {% else %}
+                    <p class="text-muted">給与明細がありません</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 財務健全性 -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-shield-check"></i> 財務健全性
+            </div>
+            <div class="card-body">
+                {% if balance_sheet %}
+                    <div class="mb-3">
+                        <h5>
+                            <span class="badge badge-health-{{ balance_sheet.financial_health }}">
+                                {{ balance_sheet.get_financial_health_display }}
+                            </span>
+                        </h5>
+                        <p>{{ balance_sheet.health_message }}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <small class="text-muted">負債比率</small>
+                            <div class="h5">{{ balance_sheet.debt_ratio|floatformat:1 }}%</div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">流動比率</small>
+                            <div class="h5">{{ balance_sheet.liquidity_ratio|floatformat:1 }}%</div>
+                        </div>
+                    </div>
+                    <a href="{% url 'balance_sheet:list' %}" class="btn btn-primary btn-sm mt-3">詳細を見る</a>
+                {% else %}
+                    <p class="text-muted">バランスシートデータがありません</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-graph-up"></i> 純資産推移
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="netWorthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('netWorthChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: '純資産',
+                    data: {{ chart_data|safe }},
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '¥' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

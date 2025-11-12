@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}給与明細一覧 - 家計管理システム{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="bi bi-cash-coin"></i> 給与明細一覧</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if salaries %}
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>年月</th>
+                                <th class="text-end">基本給</th>
+                                <th class="text-end">支給総額</th>
+                                <th class="text-end">控除総額</th>
+                                <th class="text-end">手取り額</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for salary in salaries %}
+                            <tr>
+                                <td>{{ salary.year_month|date:"Y年m月" }}</td>
+                                <td class="text-end">¥{{ salary.base_salary|floatformat:0 }}</td>
+                                <td class="text-end">¥{{ salary.total_payment|floatformat:0 }}</td>
+                                <td class="text-end text-danger">-¥{{ salary.total_deduction|floatformat:0 }}</td>
+                                <td class="text-end text-income fw-bold">¥{{ salary.actual_payment|floatformat:0 }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'salary:detail' salary.pk %}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> 詳細
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if is_paginated %}
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">前へ</a>
+                            </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">次へ</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted">給与明細がありません。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
