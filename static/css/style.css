@@ -1,47 +1,135 @@
+/* マネーフォワード風のデザイン */
+:root {
+    --mf-primary: #ff8c00;
+    --mf-secondary: #ff6b35;
+    --mf-danger: #ff6b6b;
+    --mf-warning: #ffa502;
+    --mf-success: #00c896;
+    --mf-info: #4facfe;
+    --mf-gray: #f7f9fc;
+    --mf-dark: #333333;
+    --mf-border: #e8e8e8;
+    --mf-light-orange: #fff5e6;
+}
+
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: var(--mf-gray);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--mf-primary) 0%, var(--mf-secondary) 100%) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.3rem;
 }
 
 .container {
     flex: 1;
+    max-width: 1200px;
 }
 
 .card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .card-header {
-    background-color: #f8f9fa;
+    background-color: transparent;
+    border-bottom: 2px solid var(--mf-border);
     font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1.25rem 1.5rem;
+    color: var(--mf-dark);
 }
 
+/* 統計カード - マネーフォワードスタイル */
 .stat-card {
-    border-left: 4px solid #0d6efd;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--mf-primary) 0%, var(--mf-secondary) 100%);
+    color: white;
+    padding: 1.75rem;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3);
 }
 
 .stat-card.success {
-    border-left-color: #198754;
+    background: linear-gradient(135deg, var(--mf-success) 0%, #00a878 100%);
+    box-shadow: 0 4px 15px rgba(0, 200, 150, 0.2);
+}
+
+.stat-card.success:hover {
+    box-shadow: 0 8px 25px rgba(0, 200, 150, 0.3);
 }
 
 .stat-card.warning {
-    border-left-color: #ffc107;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+}
+
+.stat-card.warning:hover {
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
 }
 
 .stat-card.danger {
-    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+}
+
+.stat-card.danger:hover {
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+}
+
+.stat-card.info {
+    background: linear-gradient(135deg, #4facfe 0%, #00b4db 100%);
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);
+}
+
+.stat-card.info:hover {
+    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
 }
 
 .stat-value {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
-    color: #6c757d;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-change {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    opacity: 0.9;
 }
 
 .badge-health-excellent {
@@ -88,20 +176,133 @@ body {
 }
 
 .text-income {
-    color: #198754;
-    font-weight: 600;
+    color: var(--mf-primary);
+    font-weight: 700;
 }
 
 .text-expense {
-    color: #dc3545;
-    font-weight: 600;
+    color: var(--mf-danger);
+    font-weight: 700;
 }
 
 .text-balance {
-    color: #0d6efd;
-    font-weight: 600;
+    color: var(--mf-info);
+    font-weight: 700;
 }
 
 .btn-action {
     margin: 0.25rem;
+}
+
+/* テーブルスタイル */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--mf-border);
+    color: var(--mf-dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s;
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--mf-gray);
+}
+
+/* ボタンスタイル */
+.btn-primary {
+    background: linear-gradient(135deg, var(--mf-primary) 0%, var(--mf-secondary) 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--mf-secondary) 0%, var(--mf-primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 208, 156, 0.3);
+}
+
+/* チャートコンテナ */
+.chart-container {
+    position: relative;
+    height: 350px;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+}
+
+/* ヘルスバッジ */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.badge-health-excellent {
+    background-color: var(--mf-primary);
+}
+
+.badge-health-good {
+    background-color: #20c997;
+}
+
+.badge-health-fair {
+    background-color: var(--mf-info);
+}
+
+.badge-health-warning {
+    background-color: var(--mf-warning);
+    color: white;
+}
+
+.badge-health-danger {
+    background-color: var(--mf-danger);
+}
+
+/* フッター */
+.footer {
+    margin-top: auto;
+    background-color: white;
+    border-top: 1px solid var(--mf-border);
+    padding: 2rem 0;
+}
+
+/* アニメーション */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 768px) {
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
 }

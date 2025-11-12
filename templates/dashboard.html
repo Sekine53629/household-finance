@@ -5,55 +5,145 @@
 {% block content %}
 <div class="row mb-4">
     <div class="col-12">
-        <h1>ダッシュボード</h1>
-        <p class="text-muted">{{ current_month|date:"Y年m月" }}の財務状況</p>
+        <h1 class="mb-1" style="color: var(--mf-dark); font-weight: 700;">ダッシュボード</h1>
+        <p class="text-muted"><i class="bi bi-calendar3"></i> {{ current_month|date:"Y年m月" }}の財務状況</p>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-3 mb-4">
     <!-- 純資産 -->
-    <div class="col-md-3">
-        <div class="card stat-card {% if net_worth >= 0 %}success{% else %}danger{% endif %}">
-            <div class="card-body">
-                <div class="stat-label">純資産</div>
-                <div class="stat-value {% if net_worth >= 0 %}text-success{% else %}text-danger{% endif %}">
-                    ¥{{ net_worth|floatformat:0 }}
-                </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card {% if net_worth >= 0 %}success{% else %}danger{% endif %}">
+            <div class="stat-label">
+                <i class="bi bi-piggy-bank"></i> 純資産
+            </div>
+            <div class="stat-value">
+                ¥{{ net_worth|floatformat:0|default:"0" }}
+            </div>
+            <div class="stat-change">
+                <i class="bi bi-graph-up"></i> 前月比 -
             </div>
         </div>
     </div>
 
     <!-- 月次収入 -->
-    <div class="col-md-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <div class="stat-label">月次収入</div>
-                <div class="stat-value text-income">
-                    ¥{{ monthly_income|floatformat:0 }}
-                </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card success">
+            <div class="stat-label">
+                <i class="bi bi-arrow-down-circle"></i> 今月の収入
+            </div>
+            <div class="stat-value">
+                ¥{{ monthly_income|floatformat:0|default:"0" }}
+            </div>
+            <div class="stat-change">
+                <i class="bi bi-cash-coin"></i> 給与・その他
             </div>
         </div>
     </div>
 
     <!-- 月次支出 -->
-    <div class="col-md-3">
-        <div class="card stat-card">
-            <div class="card-body">
-                <div class="stat-label">月次支出</div>
-                <div class="stat-value text-expense">
-                    ¥{{ monthly_expense|floatformat:0 }}
-                </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card warning">
+            <div class="stat-label">
+                <i class="bi bi-arrow-up-circle"></i> 今月の支出
+            </div>
+            <div class="stat-value">
+                ¥{{ monthly_expense|floatformat:0|default:"0" }}
+            </div>
+            <div class="stat-change">
+                <i class="bi bi-cart"></i> 固定費・変動費
             </div>
         </div>
     </div>
 
     <!-- 純キャッシュフロー -->
-    <div class="col-md-3">
-        <div class="card stat-card {% if net_cashflow >= 0 %}success{% else %}danger{% endif %}">
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card info">
+            <div class="stat-label">
+                <i class="bi bi-graph-up-arrow"></i> キャッシュフロー
+            </div>
+            <div class="stat-value">
+                ¥{{ net_cashflow|floatformat:0|default:"0" }}
+            </div>
+            <div class="stat-change">
+                {% if net_cashflow >= 0 %}
+                <i class="bi bi-arrow-up"></i> プラス収支
+                {% else %}
+                <i class="bi bi-arrow-down"></i> マイナス収支
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- クイック入力 -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color: var(--mf-light-orange); color: var(--mf-primary); border-color: var(--mf-primary);">
+                <i class="bi bi-pencil-square"></i> カンタン入力
+            </div>
             <div class="card-body">
-                <div class="stat-label">純キャッシュフロー</div>
-                <div class="stat-value {% if net_cashflow >= 0 %}text-success{% else %}text-danger{% endif %}">
-                    ¥{{ net_cashflow|floatformat:0 }}
+                <form method="post" action="#">
+                    {% csrf_token %}
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <select class="form-select" name="type">
+                                <option selected>支出</option>
+                                <option>収入</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-select" name="category">
+                                <option selected>未分類</option>
+                                <option>食費</option>
+                                <option>交通費</option>
+                                <option>娯楽</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="金額を入力してください" name="amount">
+                                <span class="input-group-text">円</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <input type="date" class="form-control" name="date" value="{{ current_month|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <button type="submit" class="btn btn-primary w-100" style="background: var(--mf-success); border: none;">
+                                <i class="bi bi-check-circle"></i> 保存する
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 今月の収支 -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-calendar-month"></i> 11月の収支
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 border-end">
+                        <small class="text-muted d-block mb-2">当月収入</small>
+                        <h4 class="text-income mb-0">¥{{ monthly_income|floatformat:0|default:"0" }}</h4>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block mb-2">当月支出</small>
+                        <h4 class="text-expense mb-0">¥{{ monthly_expense|floatformat:0|default:"0" }}</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <small class="text-muted d-block mb-2">当月収支</small>
+                    <h3 class="{% if net_cashflow >= 0 %}text-income{% else %}text-expense{% endif %} mb-0">
+                        {% if net_cashflow >= 0 %}+{% endif %}¥{{ net_cashflow|floatformat:0|default:"0" }}
+                    </h3>
                 </div>
             </div>
         </div>
@@ -156,9 +246,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: '純資産',
                     data: {{ chart_data|safe }},
-                    borderColor: '#0d6efd',
-                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                    tension: 0.1
+                    borderColor: '#ff8c00',
+                    backgroundColor: 'rgba(255, 140, 0, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#ff8c00',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }]
             },
             options: {
@@ -167,15 +264,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(51, 51, 51, 0.9)',
+                        padding: 12,
+                        borderColor: '#ff8c00',
+                        borderWidth: 1,
+                        titleFont: {
+                            size: 14
+                        },
+                        bodyFont: {
+                            size: 16,
+                            weight: 'bold'
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
+                        grid: {
+                            color: '#f0f0f0',
+                            drawBorder: false
+                        },
                         ticks: {
                             callback: function(value) {
                                 return '¥' + value.toLocaleString();
-                            }
+                            },
+                            font: {
+                                size: 12
+                            },
+                            color: '#666'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 12
+                            },
+                            color: '#666'
                         }
                     }
                 }

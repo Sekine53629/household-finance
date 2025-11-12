@@ -13,7 +13,8 @@
       "Bash(pip install:*)",
       "Bash(python manage.py migrate:*)",
       "Bash(python manage.py runserver:*)",
-      "Bash(python manage.py:*)"
+      "Bash(python manage.py:*)",
+      "Read(//c/Users/imao3/OneDrive/画像/Screenshots/**)"
     ],
     "deny": [],
     "ask": []
